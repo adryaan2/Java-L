@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Üzenetét rögzítettük</h1>
+    <p th:text="'Azonosító: ' + ${uj.id}" />
+    <p th:text="'Tartalom: ' + ${uj.tartalom}" />
+    <a th:href="/kapcsolat">Itt küldhet újabb üzenetet</a>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
+<style>
+    h1 {display: inline}
+    table{padding: 0px 20px 0px 20px; display:inline; border: 2px solid dodgerblue}
+    td, th{padding-right: 10px; border: 1px solid grey}
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Huzasok</title>
+</head>
+<body>
+
+<table style="float:left"  >
+
+    <tr colspan="3">
+        <td>
+            <h1> Huzások</h1>
+        </td>
+    </tr>
+
+    <tr>
+        <th>id</th>
+        <th>év</th>
+        <th>hét</th>
+    </tr>
+
+    <tbody>
+    <tr th:each="huzas : ${huzasok}">
+        <td th:text="${huzas.id}"></td>
+        <td th:text="${huzas.ev}"></td>
+        <td th:text="${huzas.het}"></td>
+    </tr>
+    </tbody>
+</table>
+<table style="float:left"  >
+
+    <tr colspan="3">
+        <td>
+            <h1> Huzott</h1>
+        </td>
+    </tr>
+
+    <tr>
+        <th>id</th>
+        <th>huzasid</th>
+        <th>szám</th>
+    </tr>
+
+    <tbody>
+    <tr th:each="huzott : ${huzottak}">
+        <td th:text="${huzott.id}"></td>
+        <td th:text="${huzott.huzasid}"></td>
+        <td th:text="${huzott.szam}"></td>
+    </tr>
+    </tbody>
+</table>
+<table style="float:left">
+
+    <tr>
+        <td>
+    <h1>Nyeremeny</h1>
+        </td>
+    </tr>
+
+    <tr>
+        <th>id</th>
+        <th>huzásid</th>
+        <th>találat</th>
+        <th>darab</th>
+        <th>érték</th>
+    </tr>
+
+    <tbody>
+    <tr th:each="nyeremeny : ${nyeremenyek}">
+        <td th:text="${nyeremeny.id}"></td>
+        <td th:text="${nyeremeny.huzasid}"></td>
+        <td th:text="${nyeremeny.talalat}"></td>
+        <td th:text="${nyeremeny.darab}"></td>
+        <td th:text="${nyeremeny.ertek}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
