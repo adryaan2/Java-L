@@ -1,17 +1,22 @@
 package com.gyak_bead;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Optional;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import java.util.*;
 
 @Controller
 @SpringBootApplication
@@ -27,52 +32,45 @@ public class GyakBeadApplication {
 
     @Autowired
     private Uzenetrepo uzenetrepo;
+
     public static void main(String[] args) {
         SpringApplication.run(GyakBeadApplication.class, args);
     }
 
     @GetMapping("/nyito")
-    public String Nyitp(){
+    public String nyito(){
         return "nyito";
     }
 
     @GetMapping("/adatbazis")
-    public String Adatbazis(Model model){
+    public String adatbazis(Model model){
         model.addAttribute("huzasok",huzasrepo.findAll());
         model.addAttribute("huzottak",huzottrepo.findAll());
         model.addAttribute("nyeremenyek",nyeremenyrepo.findAll());
+        return "tabla";
+    }
 
-        return "tabla";}
-    @GetMapping("kapcsolat")
-    public String Kapcsolat(Model m){
-        m.addAttribute(new UzenetekEntity());
+    @GetMapping("/kapcsolat")
+    public String kapcsolat(Model m){
+        m.addAttribute("uzenet" ,new UzenetekEntity());
         return "kapcsolat";
     }
+
     @PostMapping("/feldolgoz")
-    public String Feldolgoz(@ModelAttribute UzenetekEntity uzenet, RedirectAttributes redirect) {
-        /*for(UzenetekEntity u : uzenetrepo.findAll()){
-            if(u.getTartalom().equals(uzenet.getTartalom()) && u.getId()== uzenet.getId())
-                redirAttr.addFlashAttribute("hiba","Van már ilyen üzenet rögzítve:\n"+uzenet.getTartalom());
-            return "redirect:/kapcsolat";
-        }*/
-        for (UzenetekEntity uzenet2 : uzenetrepo.findAll())
-            if (uzenet2.getId() == (uzenet.getId()) && uzenet2.getTartalom().equals(uzenet.getTartalom())) {
-                redirect.addFlashAttribute("uzenet", "Már van ilyen.");
-
-                return "kapcsolat";
-            }
+    public String feldolgoz(@ModelAttribute(name = "uzenet") UzenetekEntity uzenet, RedirectAttributes redirect, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "kapcsolat";
+        }
         uzenetrepo.save(uzenet);
-        redirect.addFlashAttribute("uzenet", "Új üzenet hozzá lett adva!");
-        return "nyito";
+        redirect.addFlashAttribute("ertesites", "Üzenetét rögzítettük! Azonosítója: "+
+                uzenet.getId());
+        return "redirect:/kapcsolat";
     }
 
-    /*
-    @GetMapping("/oke")
-    public String oke(@ModelAttribute(name="uj") UzenetekEntity uz){
-        return "kapcsolatfeldolg";
+    @ExceptionHandler(ConstraintViolationException.class)
+    public RedirectView hibasUzenet(ConstraintViolationException exception, RedirectAttributes attributes){
+        attributes.addFlashAttribute("hiba","Legalább 10 karakter hosszú legyen az üzenet");
+        return new RedirectView("/kapcsolat");
     }
-     */
-
-
 }
 

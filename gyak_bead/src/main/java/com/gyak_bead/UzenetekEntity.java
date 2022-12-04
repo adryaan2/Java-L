@@ -1,17 +1,32 @@
 package com.gyak_bead;
 
+import org.hibernate.validator.constraints.Length;
+
+
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "uzenetek", schema = "gyakbead", catalog = "")
 public class UzenetekEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "id")
     private int id;
     @Basic
     @Column(name = "tartalom")
+    @Size(min = 10, message = "Legalább 10 karakter hosszú legyen az üzenet")
     private String tartalom;
+
+    public UzenetekEntity(String tartalom) {
+        this.tartalom = tartalom;
+    }
+
+    public UzenetekEntity() {
+    }
+
+
 
     public int getId() {
         return id;
