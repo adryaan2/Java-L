@@ -1,21 +1,48 @@
 <div xmlns:th="http://www.thymeleaf.org"
-     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <div>
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        style="margin: 0 0 0 8px; font-size: 14pt">
+    <div style="display: inline;margin: 0 0">
+        <span th:if="${#httpServletRequest.requestURI != '/nyito'}">
+            <a th:href="@{/nyito}">Főoldal</a>
+            &nbsp;&nbsp;
+        </span>
         <span sec:authorize="isAnonymous()">
-            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/login}">Bejelentkezés</a>
+            &nbsp;&nbsp;
         </span>
         <span sec:authorize="isAuthenticated()">
-            <a th:href="@{/nyito}">Home</a>
-            <a th:href="@{/logout}">Logout</a>
+            <span th:if="${#httpServletRequest.requestURI != '/adatbazis'}">
+            <a th:href="@{/adatbazis}">Adatbázis</a>
+            &nbsp;&nbsp;
+            </span>
         </span>
-        <span sec:authorize="hasRole('ROLE_ADMIN')">
+        <span sec:authorize="isAnonymous()" th:if="${#httpServletRequest.requestURI != '/regisztral'}">
+            <a th:href="@{/regisztral}">Regisztráció</a>
+            &nbsp;&nbsp;
+        </span>
+        <span th:if="${#httpServletRequest.requestURI != '/uzenetek'}">
+            <a th:href="@{/uzenetek}">Üzenetek</a>
+            &nbsp;&nbsp;
+        </span>
+
+        <span sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}">Kijelentkezés</a>
+            &nbsp;&nbsp;
+        </span>
+        <span sec:authorize="hasRole('ROLE_ADMIN')" th:if="${#httpServletRequest.requestURI != '/admin/home'}">
             <a th:href="@{/admin/home}">Admin</a>
+            &nbsp;&nbsp;
         </span>
-        <span sec:authorize="isAnonymous()">
-            <a th:href="@{/regisztral}">Regisztrál</a>
+
+        <span th:if="${#httpServletRequest.requestURI != '/kapcsolat'}">
+            <a th:href="@{/kapcsolat}">Kapcsolat</a>
+            &nbsp;&nbsp;
         </span>
     </div>
-    <div sec:authorize="isAuthenticated()">
-        <h3>Welcome <span sec:authentication="principal.username">User</span></h3>
+    <div sec:authorize="isAuthenticated()" style="float: right;font-weight: bold; background-color: bisque; margin: 0 0; color: #5db600; width: auto">
+        &nbsp;&nbsp;<span sec:authentication="principal.username">User</span>&nbsp;&nbsp;
+    </div>
+    <div sec:authorize="isAnonymous()" style="float: right; margin: 0 0; background-color: saddlebrown; color: white; width: auto">
+        &nbsp;&nbsp;<span>Vendég</span>&nbsp;&nbsp;
     </div>
 </div>

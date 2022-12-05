@@ -1,16 +1,13 @@
 package com.gyak_bead;
 
-import org.hibernate.validator.constraints.Length;
-
-
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "uzenetek", schema = "gyakbead", catalog = "")
 public class UzenetekEntity {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private int id;
@@ -18,6 +15,14 @@ public class UzenetekEntity {
     @Column(name = "tartalom")
     @Size(min = 10, message = "Legalább 10 karakter hosszú legyen az üzenet")
     private String tartalom;
+    @Basic
+    @Column(name = "irta")
+    private String irta;
+    @Basic
+    @Column(name = "datum")
+    private Timestamp datum;
+
+
 
     public UzenetekEntity(String tartalom) {
         this.tartalom = tartalom;
@@ -25,8 +30,6 @@ public class UzenetekEntity {
 
     public UzenetekEntity() {
     }
-
-
 
     public int getId() {
         return id;
@@ -62,5 +65,21 @@ public class UzenetekEntity {
         int result = id;
         result = 31 * result + (tartalom != null ? tartalom.hashCode() : 0);
         return result;
+    }
+
+    public String getIrta() {
+        return irta;
+    }
+
+    public void setIrta(String irta) {
+        this.irta = irta;
+    }
+
+    public Timestamp getDatum() {
+        return datum;
+    }
+
+    public void setDatum(Timestamp datum) {
+        this.datum = datum;
     }
 }

@@ -1,6 +1,8 @@
 CREATE TABLE `uzenetek` (
   `id` int(11) NOT NULL,
-  `tartalom` varchar(255) COLLATE utf8_hungarian_ci DEFAULT NULL
+  `tartalom` varchar(400) COLLATE utf8_hungarian_ci NOT NULL,
+  `irta` varchar(50) COLLATE utf8_hungarian_ci NOT NULL DEFAULT 'Vendég',
+  `datum` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 
