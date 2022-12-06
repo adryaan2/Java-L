@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +21,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.ConstraintViolationException;
 import com.gyak_bead.security.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Controller
 @SpringBootApplication
@@ -98,6 +105,13 @@ public class GyakBeadApplication {
         if(bindingResult.hasErrors()){
             return "kapcsolat";
         }
+        //https://www.baeldung.com/get-user-in-spring-security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken))
+            uzenet.setIrta(authentication.getName());
+        else
+            uzenet.setIrta("Vendég");
+        uzenet.setDatum(new Timestamp(System.currentTimeMillis()));
         uzenetrepo.save(uzenet);
         redirect.addFlashAttribute("ertesites", "Üzenetét rögzítettük! Azonosítója: "+
                 uzenet.getId());
@@ -108,6 +122,14 @@ public class GyakBeadApplication {
     public RedirectView hibasUzenet(ConstraintViolationException exception, RedirectAttributes attributes){
         attributes.addFlashAttribute("hiba","Legalább 10 karakter hosszú legyen az üzenet");
         return new RedirectView("/kapcsolat");
+    }
+
+    @GetMapping("/uzenetek")
+    public String uzenetek(Model model){
+        Stream<UzenetekEntity> sorted = StreamSupport.stream(uzenetrepo.findAll().spliterator(), false)
+                        .sorted((e1, e2) -> e2.getDatum().compareTo(e1.getDatum()));
+        model.addAttribute("uzenetek", sorted.toList());
+        return "uzenetek";
     }
 }
 

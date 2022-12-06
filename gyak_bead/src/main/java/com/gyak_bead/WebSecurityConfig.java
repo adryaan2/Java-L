@@ -31,8 +31,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .antMatchers("/", "/nyito","/adatbazis", "/feldolgoz", "/kapcsolat", "/regisztral",
-                                "/resources/**", "/regisztral_feldolgoz").permitAll()
+                        .antMatchers("/", "/nyito", "/feldolgoz", "/kapcsolat", "/regisztral",
+                                "/resources/**", "/regisztral_feldolgoz", "/uzenetek").permitAll()
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
