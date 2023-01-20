@@ -1,6 +1,7 @@
 package com.gyak_bead;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,9 +42,11 @@ public class HuzottController {
                 });
     }
     @DeleteMapping("/huzott/{id}")
-    void torolHuzott(@PathVariable int id)
+    public ResponseEntity<Void> torolHuzott(@PathVariable int id)
 
     {
+        //repo.deleteHuzottById(id);
         repo.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
